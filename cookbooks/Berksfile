@@ -1,0 +1,5 @@
+site :opscode
+
+cookbook 'poise-python', '~> 1.6.0' 
+cookbook 'patroni', path: './patroni/'
+
