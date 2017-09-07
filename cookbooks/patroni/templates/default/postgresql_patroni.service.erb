@@ -1,0 +1,20 @@
+[Unit]
+Description=PostgreSql RDBMS
+Documentation=https://github.com/coreos/etcd
+Conflicts=postgresql.service
+
+[Service]
+
+User=postgres
+Group=postgres
+
+Type=notify
+#Restart=always
+#RestartSec=5s
+LimitNOFILE=40000
+TimeoutStartSec=0
+
+ExecStart=/usr/lib/postgresql/9.6/bin/pg_ctl -D <%= @home_dir %>/data/<%= @node_name %> -l logfile start
+
+[Install]
+WantedBy=multi-user.target

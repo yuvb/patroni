@@ -8,7 +8,7 @@ After=syslog.target network.target
 [Service]
 Type=simple
 
-WorkingDirectory=/etc/patroni
+WorkingDirectory=<%= @home_dir %>
 
 User=postgres
 Group=postgres
@@ -17,7 +17,7 @@ Group=postgres
 # This is normally controlled by the global default set by systemd
 # StandardOutput=syslog
 
-ExecStart=/bin/bash -c 'PATH=$PATH:/usr/lib/postgresql/9.6/bin/ exec /usr/local/bin/patroni /etc/patroni/patroni.yml'
+ExecStart=/bin/bash -c 'PATH=$PATH:/usr/lib/postgresql/9.6/bin/ exec /usr/local/bin/patroni <%= @home_dir %>/patroni.yml'
 #ExecStart=/usr/local/bin/patroni /etc/patroni/patroni.yml
 
 # only kill the patroni process, not it's children, so it will gracefully stop postgres

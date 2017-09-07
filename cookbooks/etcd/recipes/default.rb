@@ -28,9 +28,9 @@ commands = [
 
 node['etcd']['nodes'].each_with_index do |(key, value), index |
   if index == 0
-      commands[6] = commands[6] + ' ' + "#{key}=http://#{value}:2338"
+      commands[6] = commands[6] + ' ' + "#{key}=http://#{value}:2380"
   else
-      commands[6] = commands[6] + ',' + "#{key}=http://#{value}:2338"
+      commands[6] = commands[6] + ',' + "#{key}=http://#{value}:2380"
   end
 end
 
