@@ -1,0 +1,18 @@
+{
+  "name": "default",
+  "description": "Install packages and pips.",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[patroni::default]"
+  ],
+  "env_run_lists": {
+
+  }
+}

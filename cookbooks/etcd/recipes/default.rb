@@ -16,7 +16,7 @@ end
 commands = [
   "/usr/bin/etcd --name #{node['hostname']}",
   "--data-dir #{node['etcd']['data_dir']}",
-  "--listen-client-urls http://#{node['ipaddress']}:2379",
+  "--listen-client-urls http://#{node['ipaddress']}:2379,http://127.0.0.1:2379",
   "--advertise-client-urls http://#{node['ipaddress']}:2379",
   "--listen-peer-urls http://#{node['ipaddress']}:2380",
   "--initial-advertise-peer-urls http://#{node['ipaddress']}:2380",
@@ -44,6 +44,7 @@ template '/etc/systemd/system/etcd_cluster.service' do
   variables(
     'command': commands
   )
+  notifies :restart, 'service[etcd_cluster]', :immediately
 end
 
 service 'etcd_cluster' do

@@ -1,0 +1,12 @@
+{
+   "name": "patroni_master",
+   "description": "Run patroni master node.",
+   "json_class": "Chef::Role",
+   "default_attributes": {
+   },
+   "override_attributes": {
+   },
+   "chef_type": "role",
+   "run_list": ["recipe[patroni::start_master]"
+   ]
+}

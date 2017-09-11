@@ -1,8 +1,10 @@
 #
 # Cookbook Name:: patroni
-# Recipe:: start_master
+# Recipe:: start_slave
 #
 # Copyright (c) 2017 The Authors, All Rights Reserved.
+
+require 'net/http'
 
 # Create patroni config data_dir
 directory "#{node['patroni']['homedir']}" do
@@ -45,41 +47,24 @@ template '/etc/systemd/system/patroni.service' do
   )
 end
 
-# Create system unit file for postgresql with patroni config
-template '/etc/systemd/system/postgresql_patroni.service' do
-  source 'postgresql_patroni.service.erb'
-  owner 'root'
-  group 'root'
-  mode 00644
-  variables(
-    'home_dir': node['patroni']['homedir'],
-    'node_name': node['hostname']
-  )
-end
+# # Create system unit file for postgresql with patroni config
+# template '/etc/systemd/system/postgresql_patroni.service' do
+#   source 'postgresql_patroni.service.erb'
+#   owner 'root'
+#   group 'root'
+#   mode 00644
+#   variables(
+#     'home_dir': node['patroni']['homedir'],
+#     'node_name': node['hostname']
+#   )
+# end
+
+uri = URI.parse("http://#{node['ipaddress']}:2379/v2/keys/service/batman/leader")
+response = Net::HTTP.get_response(uri)
+status = response.code
 
 service 'patroni' do
   supports :status => true
   action [ :enable, :start ]
-end
-
-# Check patroni status
-remote_file "wait patroni startup" do
-  path ::File.join(node['patroni']['homedir'], "dummy")
-  source "http://#{node['ipaddress']}:2379/v2/keys/service/batman/leader"
-  retries 10
-  retry_delay 10
-  backup false
-  not_if { ::File.exist?(::File.join(node['patroni']['homedir'],"install_completed.txt")) }
-end
-
-service 'postgresql_patroni' do
-  supports :status => true
-  action [ :enable, :start ]
-end
-
-file ::File.join(node['patroni']['homedir'],"install_completed.txt") do
-  owner 'root'
-  group 'root'
-  mode 00755
-  action :create
+  only_if { status == '200' }
 end
