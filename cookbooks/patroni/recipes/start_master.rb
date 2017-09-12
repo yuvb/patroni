@@ -70,6 +70,7 @@ remote_file "wait patroni startup" do
   retry_delay 10
   backup false
   not_if { ::File.exist?(::File.join(node['patroni']['homedir'],"install_completed.txt")) }
+  notifies :start, 'service[postgresql_patroni]', :immediately
 end
 
 service 'postgresql_patroni' do
